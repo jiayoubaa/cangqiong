@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.CategoryMapper">
+    <update id="updateById">
+        UPDATE category
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="sort != null ">
+                sort = #{sort}
+            </if>
+            <if test="status != null ">
+                status = #{status}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE
+        FROM category
+        WHERE id = #{id}
+    </delete>
+
+
+
+
+<select id="findByPage" resultType="com.sky.entity.Category">
+        SELECT *
+        FROM category
+        <where>
+            <if test="name != null and name != ''">
+                name Like concat('%', #{name}, '%')
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+        </where>
+        ORDER BY update_time desc
+    </select>
+</mapper>
