@@ -3,8 +3,10 @@ package com.sky.controller.admin;
 import com.sky.constant.JwtClaimsConstant;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.properties.JwtProperties;
+import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.EmployeeService;
 import com.sky.utils.JwtUtil;
@@ -13,10 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +33,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
     @Autowired
     private JwtProperties jwtProperties;
+
 
     /**
      * 登录
@@ -66,6 +66,7 @@ public class EmployeeController {
         return Result.success(employeeLoginVO);
     }
 
+
     /**
      * 退出
      *
@@ -77,10 +78,12 @@ public class EmployeeController {
         return Result.success();
     }
 
+
     /**
      * 新增员工
      *
      * @param dto 员工信息
+     *
      * @return Result
      */
     @PostMapping
@@ -91,4 +94,50 @@ public class EmployeeController {
         return Result.success();
 
     }
+
+
+    /**
+     * 分页查询员工
+     * @param dto 分页查询条件
+     * @return Result
+     */
+    @GetMapping("/page")
+    @ApiOperation(value = "分页查询员工")
+    public Result<PageResult> pageEmp(EmployeePageQueryDTO dto) {
+
+        PageResult result = employeeService.pageEmp(dto);
+        return Result.success(result);
+
+    }
+
+
+    /**
+     * 修改员工账号状态
+     */
+    @PostMapping("/status/{status}")
+    @ApiOperation(value = "修改员工账号状态")
+    public Result updateEmpStatus(@PathVariable Integer status, Long id) {
+
+        employeeService.updateEmpStatus(status, id);
+        return Result.success();
+
+    }
+
+    @GetMapping(path = "/{id}")
+    public Result<Employee> findEmpById(@PathVariable Long id) {
+
+        Employee employee = employeeService.findEmpById(id);
+        return Result.success(employee);
+
+    }
+
+
+    @PutMapping
+    public Result updateEmp(@RequestBody EmployeeDTO dto) {
+
+        employeeService.updateEmp(dto);
+        return Result.success();
+
+    }
+
 }
