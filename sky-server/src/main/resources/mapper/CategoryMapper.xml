@@ -38,6 +38,6 @@
                 and type = #{type}
             </if>
         </where>
-        ORDER BY update_time desc
+        ORDER BY sort, update_time desc
     </select>
 </mapper>

@@ -2,6 +2,7 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.anno.AutoFill;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
@@ -10,6 +11,7 @@ import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
+import com.sky.enumeration.OperationType;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
@@ -84,8 +86,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 设置员工账号状态为启用
         employee.setStatus(StatusConstant.ENABLE);
 
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.saveEmp(employee);
 
@@ -96,6 +96,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * 分页查询
      * @param dto 条件
      */
+
     @Override
     public PageResult pageEmp(EmployeePageQueryDTO dto) {
 
@@ -119,8 +120,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = Employee.builder()
                 .id(id)
                 .status(status)
-                .updateTime(LocalDateTime.now())
-                .updateUser(BaseContext.getCurrentId())
                 .build();
 
         employeeMapper.updateById(employee);
@@ -136,14 +135,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 
-
     @Override
     public void updateEmp(EmployeeDTO dto) {
 
         Employee employee = new Employee();
         BeanUtils.copyProperties(dto, employee);
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.updateById(employee);
 

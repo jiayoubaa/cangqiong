@@ -2,13 +2,16 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.anno.AutoFill;
 import com.sky.constant.MessageConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
 import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
+import com.sky.enumeration.OperationType;
 import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.DishMapper;
@@ -35,17 +38,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
+
     @Override
     public void addCategory(CategoryDTO dto) {
 
         Category category = new Category();
         BeanUtils.copyProperties(dto, category);
 
-        category.setStatus(0);
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
-        category.setCreateUser(BaseContext.getCurrentId());
-        category.setUpdateUser(BaseContext.getCurrentId());
+        category.setStatus(StatusConstant.DISABLE);
 
         categoryMapper.add(category);
 
@@ -99,8 +99,6 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category category = new Category();
         BeanUtils.copyProperties(dto, category);
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(BaseContext.getCurrentId());
 
         categoryMapper.updateById(category);
 
@@ -118,8 +116,6 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = Category.builder()
                 .id(id)
                 .status(status)
-                .updateTime(LocalDateTime.now())
-                .updateUser(BaseContext.getCurrentId())
                 .build();
 
         categoryMapper.updateById(category);
